@@ -5,17 +5,21 @@ const { usernameToUserId } = require("../utils/data-manipulation.js");
 const seed = async (data) => {
   const { articleData, commentData, topicData, userData } = data;
 
+  /******************************************************************/
+
   // DROP TABLES
   await db.query(`DROP TABLE IF EXISTS comments;`);
   await db.query(`DROP TABLE IF EXISTS articles;`);
   await db.query(`DROP TABLE IF EXISTS TOPICS;`);
   await db.query(`DROP TABLE IF EXISTS users;`);
 
+  /******************************************************************/
+
   // CREATE TABLE: USERS
   await db.query(`
     CREATE TABLE users (
       user_id         SERIAL PRIMARY KEY,
-      username        VARCHAR(20) NOT NULL, 
+      username        VARCHAR(20) UNIQUE NOT NULL, 
       avatar_URL      VARCHAR(100),
       name            VARCHAR(80) NOT NULL
     );`);
@@ -50,6 +54,8 @@ const seed = async (data) => {
       created_at      TIMESTAMP DEFAULT NOW(),
       body            TEXT
     );`);
+
+  /******************************************************************/
 
   // SEED TABLE: USERS
   const formattedUsers = userData.map((user) => {
@@ -93,8 +99,7 @@ const seed = async (data) => {
   });
 
   const articlesQuery = format(
-    `INSERT INTO articles
-      (title, body, votes, topic, author, created_at)
+    `INSERT INTO articles (title, body, votes, topic, author, created_at)
     VALUES %L
     RETURNING *;`,
     formattedArticles
@@ -116,13 +121,14 @@ const seed = async (data) => {
   });
 
   const commentsQuery = format(
-    `INSERT INTO comments
-      (author, article_id, votes, created_at, body)
+    `INSERT INTO comments (author, article_id, votes, created_at, body)
     VALUES %L
     RETURNING *;`,
     formattedComments
   );
   await db.query(commentsQuery);
 };
+
+/******************************************************************/
 
 module.exports = seed;
