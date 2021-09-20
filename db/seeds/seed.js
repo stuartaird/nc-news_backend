@@ -10,7 +10,7 @@ const seed = async (data) => {
   // DROP TABLES
   await db.query(`DROP TABLE IF EXISTS comments;`);
   await db.query(`DROP TABLE IF EXISTS articles;`);
-  await db.query(`DROP TABLE IF EXISTS TOPICS;`);
+  await db.query(`DROP TABLE IF EXISTS topics;`);
   await db.query(`DROP TABLE IF EXISTS users;`);
 
   /******************************************************************/

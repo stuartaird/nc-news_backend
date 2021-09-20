@@ -14,7 +14,7 @@ exports.usernameToUserId = async (authorsData) => {
     .then((result) => result.rows);
 
   updatedAuthors.forEach((entry) => {
-    let user = userList.find((user) => (entry.author = user.username));
+    let user = userList.find((user) => user.username === entry.author);
     entry.author = user.user_id;
   });
 
