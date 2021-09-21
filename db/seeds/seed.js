@@ -20,7 +20,7 @@ const seed = async (data) => {
     CREATE TABLE users (
       user_id         SERIAL PRIMARY KEY,
       username        VARCHAR(20) UNIQUE NOT NULL, 
-      avatar_URL      VARCHAR(100),
+      avatar_URL      VARCHAR(150),
       name            VARCHAR(80) NOT NULL
     );`);
 
@@ -56,6 +56,11 @@ const seed = async (data) => {
     );`);
 
   /******************************************************************/
+
+  //////////////
+  // const newUsers = await getFormattedUsers(userData);
+  // console.log(`seed >> newUsers: ${newUsers}`);
+  //////////////
 
   // SEED TABLE: USERS
   const formattedUsers = userData.map((user) => {
