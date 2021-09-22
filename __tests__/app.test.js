@@ -15,12 +15,28 @@ describe("Invalid URL", () => {
 });
 
 describe("/api:", () => {
-  test("200: Return endpoint JSON", () => {
-    return request(app)
-      .get("/api")
-      .expect(200)
-      .then((response) => {
-        expect(response.body).toEqual(endpoints);
-      });
+  describe("GET:", () => {
+    test("200: Return endpoint JSON", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual(endpoints);
+        });
+    });
+  });
+});
+
+describe("/api/topics:", () => {
+  describe("GET: ", () => {
+    test("200: Returns an object with a key of topics containing an array", () => {
+      return request(app)
+        .get("/api/topics")
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual(expect.any(Object));
+          expect(response.body.topics).toEqual(expect.any(Array));
+        });
+    });
   });
 });

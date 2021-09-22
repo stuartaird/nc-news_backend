@@ -6,16 +6,17 @@ const seed = async (data) => {
   const { articleData, commentData, topicData, userData } = data;
 
   /******************************************************************/
+  /*                        DROP TABLES                             */
+  /******************************************************************/
 
-  // DROP TABLES
   await db.query(`DROP TABLE IF EXISTS comments;`);
   await db.query(`DROP TABLE IF EXISTS articles;`);
   await db.query(`DROP TABLE IF EXISTS topics;`);
   await db.query(`DROP TABLE IF EXISTS users;`);
 
   /******************************************************************/
-
-  // CREATE TABLE: USERS
+  /*                        CREATE TABLES                           */
+  /******************************************************************/
   await db.query(`
     CREATE TABLE users (
       user_id         SERIAL PRIMARY KEY,
@@ -24,7 +25,6 @@ const seed = async (data) => {
       name            VARCHAR(80) NOT NULL
     );`);
 
-  // CREATE TABLE: TOPICS
   await db.query(`
     CREATE TABLE topics (
       topic_id        SERIAL PRIMARY KEY,
@@ -32,7 +32,6 @@ const seed = async (data) => {
       description     VARCHAR(100)
     );`);
 
-  // CREATE TABLE: ARTICLES
   await db.query(`
     CREATE TABLE articles (
       article_id      SERIAL PRIMARY KEY,
@@ -44,7 +43,6 @@ const seed = async (data) => {
       created_at      TIMESTAMP DEFAULT NOW()
     );`);
 
-  // CREATE TABLE: COMMENTS
   await db.query(`
     CREATE TABLE comments (
       comment_id      SERIAL PRIMARY KEY,
@@ -56,13 +54,9 @@ const seed = async (data) => {
     );`);
 
   /******************************************************************/
-
-  //////////////
-  // const newUsers = await getFormattedUsers(userData);
-  // console.log(`seed >> newUsers: ${newUsers}`);
-  //////////////
-
-  // SEED TABLE: USERS
+  /*                        SEED TABLES                             */
+  /******************************************************************/
+  // USERS
   const formattedUsers = userData.map((user) => {
     return [user.username, user.avatar_url, user.name];
   });
@@ -75,7 +69,7 @@ const seed = async (data) => {
   );
   await db.query(userQuery);
 
-  // SEED TABLE: TOPICS
+  // TOPICS
   const formattedTopics = topicData.map((topic) => {
     return [topic.slug, topic.description];
   });
@@ -88,7 +82,7 @@ const seed = async (data) => {
   );
   await db.query(topicsQuery);
 
-  // SEED TABLE: ARTICLES
+  // ARTICLES
   // replace author names with id's prior to seeding articles table
   const updatedArticles = await usernameToUserId(articleData);
 
@@ -111,7 +105,7 @@ const seed = async (data) => {
   );
   await db.query(articlesQuery);
 
-  // SEED TABLE: COMMENTS
+  // COMMENTS
   // replace author names with id's prior to seeding comments table
   const updatedComments = await usernameToUserId(commentData);
 
