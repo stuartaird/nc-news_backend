@@ -11,8 +11,8 @@ exports.fetchArticle = async (article_id) => {
                 a.votes,
                 COUNT(c.*) AS totalcomments
         FROM    articles AS a 
-                    JOIN users AS u ON a.author = u.user_id
-                    JOIN comments AS c ON a.article_id = c.article_id
+                    LEFT JOIN users AS u ON a.author = u.user_id
+                    LEFT JOIN comments AS c ON a.article_id = c.article_id
         WHERE   a.article_id = $1
         GROUP BY u.username, a.title, a.article_id, a.body, a.topic, a.created_at, a.votes;`;
 
