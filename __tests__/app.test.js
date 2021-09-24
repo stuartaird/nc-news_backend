@@ -161,3 +161,16 @@ describe("api/articles", () => {
     });
   });
 });
+
+describe("/api/articles/:article_id/comments", () => {
+  describe("GET", () => {
+    test("200: Returns an array of comments for the parametric article_id", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments).toEqual(expect.any(Array));
+        });
+    });
+  });
+});

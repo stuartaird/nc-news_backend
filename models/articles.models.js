@@ -54,6 +54,7 @@ exports.updateVotes = async (article_id, inc_votes) => {
 };
 
 exports.fetchArticles = async () => {
+  // TODO: REFACTOR WITH fetchArticle (if !article_id change qStr)
   const queryString = `
     SELECT  
         u.username, 
