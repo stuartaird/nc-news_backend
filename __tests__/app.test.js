@@ -213,5 +213,32 @@ describe("/api/articles/:article_id/comments", () => {
           expect(response.body.comment).toEqual(expect.any(Array));
         });
     });
+    test("400: Reject invalid article_id", () => {
+      return request(app)
+        .post("/api/articles/sausage/comments")
+        .send({ username: "lurker", body: "no-one will ever know" })
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Bad Request" });
+        });
+    });
+    test("400: Reject invalid request.body JSON", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "lurker", comment: "bad key" })
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Bad Request" });
+        });
+    });
+    test("400: Reject if username doesn't exist", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send({ username: "doesNotExist", body: "TBD" })
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Bad User Id" });
+        });
+    });
   });
 });
