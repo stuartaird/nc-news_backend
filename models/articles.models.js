@@ -53,4 +53,24 @@ exports.updateVotes = async (article_id, inc_votes) => {
   }
 };
 
-exports.fetchArticles = async () => {};
+exports.fetchArticles = async () => {
+  const queryString = `
+    SELECT  
+        u.username, 
+        a.title,
+        a.article_id,
+        a.body,
+        a.topic,
+        a.created_at,
+        a.votes,
+        COUNT(c.*) AS totalcomments
+    FROM    
+        articles AS a 
+            JOIN users AS u ON a.author = u.user_id
+            LEFT JOIN comments AS c ON a.article_id = c.article_id
+    GROUP BY 
+        u.username, a.title, a.article_id, a.body, a.topic, a.created_at, a.votes;`;
+
+  const articles = await db.query(queryString);
+  return articles.rows;
+};

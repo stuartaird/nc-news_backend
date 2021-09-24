@@ -24,7 +24,8 @@ exports.changeVotes = async (request, response, next) => {
 
 exports.getArticles = async (request, response, next) => {
   try {
-    fetchArticles();
+    const articles = await fetchArticles();
+    response.status(200).send({ articles });
   } catch (error) {
     next(error);
   }

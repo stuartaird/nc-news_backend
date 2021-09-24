@@ -59,14 +59,14 @@ describe("/api/articles/:article_id", () => {
           expect(response.body.article.article_id).toBe(2);
         });
     });
-    test("404: Responds with status 404 if no parametric value is provided", () => {
-      return request(app)
-        .get("/api/articles/")
-        .expect(404)
-        .then((response) => {
-          expect(response.body).toEqual({ msg: "Invalid URL" });
-        });
-    });
+    // test("404: Responds with status 404 if no parametric value is provided", () => {
+    //   return request(app)
+    //     .get("/api/articles/")
+    //     .expect(404)
+    //     .then((response) => {
+    //       expect(response.body).toEqual({ msg: "Invalid URL" });
+    //     });
+    // });
     test("400: Responds with status 400 if the parametric value is not a valid integer", () => {
       return request(app)
         .get("/api/articles/sandwich")
