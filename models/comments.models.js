@@ -1,7 +1,11 @@
 const db = require("../db/connection.js");
 
 exports.fetchComments = async (article_id) => {
-  const queryString = `
+  const pattern = /\D/gi; // test for non-numeric characters
+  if (pattern.test(article_id)) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  } else {
+    const queryString = `
         SELECT 
             comment_id, 
             votes, 
@@ -12,8 +16,8 @@ exports.fetchComments = async (article_id) => {
             comments 
                 JOIN users AS u on comments.author = u.user_id
         WHERE
-            article_id = $1;
-    `;
-  const comments = await db.query(queryString, [article_id]);
-  return comments.rows;
+            article_id = $1;`;
+    const comments = await db.query(queryString, [article_id]);
+    return comments.rows;
+  }
 };

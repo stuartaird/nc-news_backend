@@ -172,5 +172,35 @@ describe("/api/articles/:article_id/comments", () => {
           expect(response.body.comments).toEqual(expect.any(Array));
         });
     });
+    test("200: Comments array is in the correct format", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          const r = response.body.comments[0];
+          expect(r.comment_id).toEqual(expect.any(Number));
+          expect(r.votes).toEqual(expect.any(Number));
+          expect(r.created_at).toEqual(expect.any(String));
+          expect(r.username).toEqual(expect.any(String));
+          expect(r.body).toEqual(expect.any(String));
+        });
+    });
+    test("200: Responds with an empty array if the article has no comments", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments).toEqual(expect.any(Array));
+          expect(response.body.comments.length).toBe(0);
+        });
+    });
+    test("400: Responds with status 400 if the parametric value is not a valid integer", () => {
+      return request(app)
+        .get("/api/articles/apple/comments")
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Bad Request" });
+        });
+    });
   });
 });
