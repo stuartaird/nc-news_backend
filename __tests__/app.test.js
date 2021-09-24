@@ -203,4 +203,15 @@ describe("/api/articles/:article_id/comments", () => {
         });
     });
   });
+  describe("POST", () => {
+    test("201: Adds new comment to the database and returns comment details", () => {
+      return request(app)
+        .post("/api/articles/2/comments")
+        .send({ username: "lurker", body: "awesome article!" })
+        .expect(201)
+        .then((response) => {
+          expect(response.body.comment).toEqual(expect.any(Array));
+        });
+    });
+  });
 });
