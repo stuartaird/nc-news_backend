@@ -159,6 +159,76 @@ describe("api/articles", () => {
           expect(response.body.articles).toEqual(expect.any(Array));
         });
     });
+    test("200: Topic query param will filter articles array", () => {
+      return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles.every((article) => (article.topic = "cats")));
+        });
+    });
+    test("200: Sort_by query param will reorder results", () => {
+      return (
+        request(app)
+          .get("/api/articles?sort_by=title")
+          // default sort order is DESC
+          .expect(200)
+          .then((response) => {
+            const articles = response.body.articles;
+            const lastIdx = articles.length - 1;
+            expect(articles[0].title).toBe("Z");
+            expect(articles[lastIdx].title).toBe("A");
+          })
+      );
+    });
+    test("200: Order query param will reorder results", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title&order=ASC")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          const lastIdx = articles.length - 1;
+          expect(articles[0].title).toBe("A");
+          expect(articles[lastIdx].title).toBe("Z");
+        });
+    });
+    test("200: Endpoint will return valid results if topic, sort_by and order are all provided", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=author&order=asc")
+        .expect(200)
+        .then((response) => {
+          const articles = response.body.articles;
+          const lastIdx = articles.length - 1;
+          expect(articles[0].author).toBe("butter_bridge");
+          expect(articles[0].article_id).toBe(1);
+          expect(articles[lastIdx].article_id).toBe(10);
+          expect(articles[lastIdx].author).toBe("rogersop");
+        });
+    });
+    test("400: Endpoint responds with 'Invalid topic' if it can't be found in the topics table", () => {
+      return request(app)
+        .get("/api/articles?topic=hamsters")
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Invalid topic" });
+        });
+    });
+    test("400: Endpoint responds with 'Invalid sort' if the field doesn't exist in the topics table", () => {
+      return request(app)
+        .get("/api/articles?sort_by=thisFieldDoesntExist")
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Invalid sort" });
+        });
+    });
+    test("400: Endpoint responds with 'Invalid sort order' if the value isn't 'DESC' or 'ASC'", () => {
+      return request(app)
+        .get("/api/articles?order=disc")
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Invalid sort order" });
+        });
+    });
   });
 });
 
@@ -181,7 +251,7 @@ describe("/api/articles/:article_id/comments", () => {
           expect(r.comment_id).toEqual(expect.any(Number));
           expect(r.votes).toEqual(expect.any(Number));
           expect(r.created_at).toEqual(expect.any(String));
-          expect(r.username).toEqual(expect.any(String));
+          expect(r.author).toEqual(expect.any(String));
           expect(r.body).toEqual(expect.any(String));
         });
     });
