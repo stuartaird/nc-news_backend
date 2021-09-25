@@ -7,7 +7,7 @@ exports.fetchArticle = async (article_id) => {
   } else {
     const queryString = `
     SELECT  
-        u.username, 
+        u.username AS author, 
         a.title,
         a.article_id,
         a.body,
@@ -37,7 +37,7 @@ exports.updateVotes = async (article_id, inc_votes) => {
   if (articlePattern.test(article_id) || !votesPattern.test(inc_votes)) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   } else {
-    const queryString = `        
+    const updateVotesQuery = `        
     UPDATE articles
         SET votes = CASE WHEN (votes + $2 > 0) 
                         THEN votes + $2
@@ -46,9 +46,28 @@ exports.updateVotes = async (article_id, inc_votes) => {
     WHERE   
         article_id = $1
     RETURNING 
-        *;`;
+        article_id`;
 
-    const updatedArticle = await db.query(queryString, [article_id, inc_votes]);
+    const updated_Id = await db.query(updateVotesQuery, [article_id, inc_votes]);
+
+    const articleQuery = `
+    SELECT 
+      article_id,
+      title,
+      body,
+      votes,
+      topic,
+      u.username AS author,
+      created_at
+    FROM
+      articles 
+      JOIN users AS u on articles.author = u.user_id
+    WHERE
+      article_id = $1;
+   `;
+
+    const updatedArticle = await db.query(articleQuery, [updated_Id.rows[0].article_id]);
+
     return updatedArticle.rows[0];
   }
 };
@@ -57,7 +76,7 @@ exports.fetchArticles = async () => {
   // TODO: REFACTOR WITH fetchArticle (if !article_id change qStr)
   const queryString = `
     SELECT  
-        u.username, 
+        u.username AS author, 
         a.title,
         a.article_id,
         a.body,
@@ -67,8 +86,8 @@ exports.fetchArticles = async () => {
         COUNT(c.*) AS totalcomments
     FROM    
         articles AS a 
-            JOIN users AS u ON a.author = u.user_id
-            LEFT JOIN comments AS c ON a.article_id = c.article_id
+          JOIN users AS u ON a.author = u.user_id
+          LEFT JOIN comments AS c ON a.article_id = c.article_id
     GROUP BY 
         u.username, a.title, a.article_id, a.body, a.topic, a.created_at, a.votes;`;
 

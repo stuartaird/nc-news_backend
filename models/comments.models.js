@@ -10,7 +10,7 @@ exports.fetchComments = async (article_id) => {
             comment_id, 
             votes, 
             created_at, 
-            u.username, 
+            u.username as author, 
             body
         FROM
             comments 
@@ -55,7 +55,7 @@ exports.insertComment = async (article_id, comment) => {
       const commentQueryString = `
         SELECT
             comment_id, 
-            u.username, 
+            u.username as author, 
             article_id, 
             votes, 
             created_at,
