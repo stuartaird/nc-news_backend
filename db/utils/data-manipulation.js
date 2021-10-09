@@ -5,14 +5,11 @@ exports.getAuthorList = () => {
   return db.query(`SELECT user_id, username FROM USERS;`).then((results) => results.rows);
 };
 
-exports.usernameToUserId = async (authorsData) => {
+exports.usernameToUserId = async (authorsData, userList) => {
   const updatedAuthors = cloneDeep(authorsData);
 
-  const userList = await db.query(`SELECT user_id, username FROM USERS;`);
-  let results = userList.rows;
-
   updatedAuthors.forEach((entry) => {
-    let user = results.find((usr) => usr.username === entry.author);
+    let user = userList.find((usr) => usr.username === entry.author);
     entry.author = user.user_id;
   });
 

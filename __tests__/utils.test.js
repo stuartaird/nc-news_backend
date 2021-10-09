@@ -1,10 +1,10 @@
 const { usernameToUserId } = require("../db/utils/data-manipulation");
 const connection = require("../db/connection.js");
-afterAll(() => connection.end());
+const seed = require("../db/seeds/seed.js");
+const testData = require("../db/data/test-data/index.js");
 
-// doesn't mutate arg
-// returns an array of objects
-// returns arg with updated author key
+beforeEach(() => seed(testData));
+afterAll(() => connection.end());
 
 describe("usernameToUserId: ", () => {
   test("doesn't mutate array arg", async () => {
@@ -55,8 +55,17 @@ describe("usernameToUserId: ", () => {
         created_at: new Date(1583025180000),
       },
     ];
-    await usernameToUserId(testArray);
+
+    const testUsers = [
+      { user_id: 1, username: "butter_bridge" },
+      { user_id: 2, username: "icellusedkars" },
+      { user_id: 3, username: "rogersop" },
+      { user_id: 4, username: "lurker" },
+    ];
+
+    await usernameToUserId(testArray, testUsers);
     expect(testArray).toEqual(testArrayCopy);
+    expect(testArray).not.toBe(testArrayCopy);
   });
 
   test("returns an array of objects", async () => {
@@ -83,7 +92,15 @@ describe("usernameToUserId: ", () => {
         created_at: new Date(1583025180000),
       },
     ];
-    const results = await usernameToUserId(testArray);
+
+    const testUsers = [
+      { user_id: 1, username: "butter_bridge" },
+      { user_id: 2, username: "icellusedkars" },
+      { user_id: 3, username: "rogersop" },
+      { user_id: 4, username: "lurker" },
+    ];
+
+    const results = await usernameToUserId(testArray, testUsers);
     expect(results).toEqual(expect.any(Array));
     expect(results).toContainEqual(expect.any(Object));
   });
@@ -112,7 +129,15 @@ describe("usernameToUserId: ", () => {
         created_at: new Date(1583025180000),
       },
     ];
-    const results = await usernameToUserId(testArray);
+
+    const testUsers = [
+      { user_id: 1, username: "butter_bridge" },
+      { user_id: 2, username: "icellusedkars" },
+      { user_id: 3, username: "rogersop" },
+      { user_id: 4, username: "lurker" },
+    ];
+
+    const results = await usernameToUserId(testArray, testUsers);
     expect(results).toEqual([
       {
         body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
