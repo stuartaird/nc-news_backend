@@ -27,7 +27,7 @@ describe("/api", () => {
   });
 });
 
-describe.only("/api/topics", () => {
+describe("/api/topics", () => {
   describe("GET", () => {
     test("200: Returns an object with a key of topics containing an array", () => {
       testTopics = [
@@ -75,14 +75,38 @@ describe("/api/articles/:article_id", () => {
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual(expect.any(Object));
+          expect(response.body.article).toEqual(expect.any(Object));
         });
     });
-    test("200: Article.article_id matches the supplied parametric value", () => {
+    test("200: Returns the correct article", () => {
+      const testArticle = {
+        article: {
+          author: "icellusedkars",
+          title: "Sony Vaio; or, The Laptop",
+          article_id: 2,
+          body: "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me.",
+          topic: "mitch",
+          created_at: "2020-10-16T05:03:00.000Z",
+          votes: 0,
+          totalcomments: "0",
+        },
+      };
+
       return request(app)
         .get("/api/articles/2")
         .expect(200)
         .then((response) => {
-          expect(response.body.article.article_id).toBe(2);
+          const article = response.body.article;
+          expect(article.author).toBe("icellusedkars");
+          expect(response.body.article.title).toBe("Sony Vaio; or, The Laptop");
+          expect(article.article_id).toBe(2);
+          expect(article.body).toBe(
+            "Call me Mitchell. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would buy a laptop about a little and see the codey part of the world. It is a way I have of driving off the spleen and regulating the circulation. Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in my soul; whenever I find myself involuntarily pausing before coffin warehouses, and bringing up the rear of every funeral I meet; and especially whenever my hypos get such an upper hand of me, that it requires a strong moral principle to prevent me from deliberately stepping into the street, and methodically knocking people’s hats off—then, I account it high time to get to coding as soon as I can. This is my substitute for pistol and ball. With a philosophical flourish Cato throws himself upon his sword; I quietly take to the laptop. There is nothing surprising in this. If they but knew it, almost all men in their degree, some time or other, cherish very nearly the same feelings towards the the Vaio with me."
+          );
+          expect(article.topic).toBe("mitch");
+          expect(article.created_at).toBe("2020-10-16T05:03:00.000Z");
+          expect(article.votes).toBe(0);
+          expect(article.totalcomments).toBe(0);
         });
     });
 

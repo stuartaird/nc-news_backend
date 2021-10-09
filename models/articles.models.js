@@ -14,7 +14,7 @@ exports.fetchArticle = async (article_id) => {
         a.topic,
         a.created_at,
         a.votes,
-        COUNT(c.*) AS totalcomments
+        COUNT(c.*)::int AS totalcomments
     FROM    
         articles AS a 
             JOIN users AS u ON a.author = u.user_id
@@ -118,7 +118,7 @@ exports.fetchArticles = async (topic, sort_by = "article_id", order = "DESC") =>
         a.topic,
         a.created_at,
         a.votes,
-        COUNT(c.*) AS totalcomments
+        COUNT(c.*)::int AS totalcomments
     FROM    
         articles AS a 
           JOIN users AS u ON a.author = u.user_id
