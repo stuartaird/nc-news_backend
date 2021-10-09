@@ -27,15 +27,41 @@ describe("/api", () => {
   });
 });
 
-describe("/api/topics", () => {
+describe.only("/api/topics", () => {
   describe("GET", () => {
     test("200: Returns an object with a key of topics containing an array", () => {
+      testTopics = [
+        {
+          topic_id: 1,
+          slug: "mitch",
+          description: "The man, the Mitch, the legend",
+        },
+        {
+          topic_id: 2,
+          slug: "cats",
+          description: "Not dogs",
+        },
+        {
+          topic_id: 3,
+          slug: "paper",
+          description: "what books are made of",
+        },
+      ];
+
       return request(app)
         .get("/api/topics")
         .expect(200)
         .then((response) => {
           expect(response.body).toEqual(expect.any(Object));
           expect(response.body.topics).toEqual(expect.any(Array));
+          expect(response.body.topics.length).toEqual(testTopics.length);
+          response.body.topics.forEach((topic) => {
+            expect(topic).toMatchObject({
+              topic_id: expect.any(Number),
+              slug: expect.any(String),
+              description: expect.any(String),
+            });
+          });
         });
     });
   });
@@ -59,14 +85,7 @@ describe("/api/articles/:article_id", () => {
           expect(response.body.article.article_id).toBe(2);
         });
     });
-    // test("404: Responds with status 404 if no parametric value is provided", () => {
-    //   return request(app)
-    //     .get("/api/articles/")
-    //     .expect(404)
-    //     .then((response) => {
-    //       expect(response.body).toEqual({ msg: "Invalid URL" });
-    //     });
-    // });
+
     test("400: Responds with status 400 if the parametric value is not a valid integer", () => {
       return request(app)
         .get("/api/articles/sandwich")
