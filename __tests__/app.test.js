@@ -223,7 +223,19 @@ describe("api/articles", () => {
         .get("/api/articles")
         .expect(200)
         .then((response) => {
-          expect(response.body.articles).toEqual(expect.any(Array));
+          const { articles } = response.body;
+          expect(articles).toEqual(expect.any(Array));
+          expect(articles.length).toBeGreaterThan(0);
+          articles.forEach((article) => {
+            expect(article.author).toEqual(expect.any(String));
+            expect(article.author).toEqual(expect.any(String));
+            expect(article.article_id).toEqual(expect.any(Number));
+            expect(article.body).toEqual(expect.any(String));
+            expect(article.topic).toEqual(expect.any(String));
+            expect(article.created_at).toEqual(expect.any(String));
+            expect(article.votes).toEqual(expect.any(Number));
+            expect(article.totalcomments).toEqual(expect.any(Number));
+          });
         });
     });
     test("200: Topic query param will filter articles array", () => {
