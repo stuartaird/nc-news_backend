@@ -204,6 +204,15 @@ describe("/api/articles/:article_id", () => {
           expect(response.body).toEqual({ msg: "Bad Request" });
         });
     });
+    test("404: Responds with status 404 if the parametric value can't be found in the database", () => {
+      return request(app)
+        .patch("/api/articles/9999")
+        .send({ inc_votes: 5 })
+        .expect(404)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Article Not Found" });
+        });
+    });
   });
 });
 

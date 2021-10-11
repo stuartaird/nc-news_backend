@@ -54,6 +54,10 @@ exports.updateVotes = async (article_id, inc_votes) => {
 
     const updated_Id = await db.query(updateVotesQuery, [article_id, inc_votes]);
 
+    if (updated_Id.rowCount === 0) {
+      return Promise.reject({ status: 404, msg: "Article Not Found" });
+    }
+
     const articleQuery = `
     SELECT 
       article_id,
@@ -72,11 +76,7 @@ exports.updateVotes = async (article_id, inc_votes) => {
 
     const updatedArticle = await db.query(articleQuery, [updated_Id.rows[0].article_id]);
 
-    if (updatedArticle.rowCount === 0) {
-      return Promise.reject({ status: 404, msg: "Article Not Found" });
-    } else {
-      return updatedArticle.rows[0];
-    }
+    return updatedArticle.rows[0];
   }
 };
 
