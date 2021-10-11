@@ -126,6 +126,14 @@ describe("/api/articles/:article_id", () => {
           expect(response.body).toEqual({ msg: "Bad Request" });
         });
     });
+    test("404: Response with status 404 if parametric value doesn't exist in the database", () => {
+      return request(app)
+        .get("/api/articles/9999")
+        .expect(404)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Article Not Found" });
+        });
+    });
   });
   describe("PATCH", () => {
     test("200: Increments article votes as expected, returning an object containing the updated article", () => {
@@ -134,8 +142,15 @@ describe("/api/articles/:article_id", () => {
         .send({ inc_votes: 5 })
         .expect(200)
         .then((response) => {
+          const { article } = response.body;
           expect(response.body.hasOwnProperty("article")).toBe(true);
-          expect(response.body.article.votes).toBe(105);
+          expect(article.article_id).toBe(1);
+          expect(article.title).toBe("Living in the shadow of a great man");
+          expect(article.body).toBe("I find this existence challenging");
+          expect(article.votes).toBe(105);
+          expect(article.topic).toBe("mitch");
+          expect(article.author).toBe("butter_bridge");
+          expect(article.created_at).toBe("2020-07-09T20:11:00.000Z");
         });
     });
     test("200: Repeated calls will continue to increment vote count as expected", () => {

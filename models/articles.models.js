@@ -25,6 +25,11 @@ exports.fetchArticle = async (article_id) => {
         u.username, a.title, a.article_id, a.body, a.topic, a.created_at, a.votes;`;
 
     const articleDetails = await db.query(queryString, [article_id]);
+
+    if (articleDetails.rowCount === 0) {
+      return Promise.reject({ status: 404, msg: "Article Not Found" });
+    }
+
     return articleDetails.rows[0];
   }
 };
@@ -32,7 +37,6 @@ exports.fetchArticle = async (article_id) => {
 exports.updateVotes = async (article_id, inc_votes) => {
   const articlePattern = /\D/gi; // test for non-numeric characters
   const votesPattern = /^-*\d+/; // allow for negative vote adjustments
-  // const str_votes = inc_votes.toString();
 
   if (articlePattern.test(article_id) || !votesPattern.test(inc_votes)) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
@@ -68,7 +72,11 @@ exports.updateVotes = async (article_id, inc_votes) => {
 
     const updatedArticle = await db.query(articleQuery, [updated_Id.rows[0].article_id]);
 
-    return updatedArticle.rows[0];
+    if (updatedArticle.rowCount === 0) {
+      return Promise.reject({ status: 404, msg: "Article Not Found" });
+    } else {
+      return updatedArticle.rows[0];
+    }
   }
 };
 
