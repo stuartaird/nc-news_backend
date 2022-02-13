@@ -10,16 +10,89 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves an array of all articles",
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
-          "title": "Seafood substitutions are increasing",
+          "author": "tickle122",
+          "title": "The vegan carnivore?",
+          "article_id": 36,
+          "body": "The chef Richard McGeown has faced bigger culinary challenges in his distinguished career than frying a meat patty in a little sunflower oil and butter. But this time the eyes and cameras of hundreds of journalists in the room were fixed on the 5oz (140g) pink disc sizzling in his pan, one that had been five years and €250,000 in the making. This was the world’s first proper portion of cultured meat, a beef burger created by Mark Post, professor of physiology, and his team at Maastricht University in the Netherlands. Post (which rhymes with ‘lost’, not ‘ghost’) has been working on in vitro meat (IVM) since 2009. On 5 August this year he presented his cultured beef burger to the world as a ‘proof of concept’. Having shown that the technology works, Post believes that in a decade or so we could see commercial production of meat that has been grown in a lab rather than reared and slaughtered. The comforting illusion that supermarket trays of plastic-wrapped steaks are not pieces of dead animal might become a discomforting reality.",
           "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": "2020-03-09T21:21:00.000Z",
+          "votes": 45,
+          "totalcomments": 6
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves all details for the specified article",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "author": "tickle122",
+        "title": "The vegan carnivore?",
+        "article_id": 36,
+        "body": "The chef Richard McGeown has faced bigger culinary challenges in his distinguished career than frying a meat patty in a little sunflower oil and butter. But this time the eyes and cameras of hundreds of journalists in the room were fixed on the 5oz (140g) pink disc sizzling in his pan, one that had been five years and €250,000 in the making. This was the world’s first proper portion of cultured meat, a beef burger created by Mark Post, professor of physiology, and his team at Maastricht University in the Netherlands. Post (which rhymes with ‘lost’, not ‘ghost’) has been working on in vitro meat (IVM) since 2009. On 5 August this year he presented his cultured beef burger to the world as a ‘proof of concept’. Having shown that the technology works, Post believes that in a decade or so we could see commercial production of meat that has been grown in a lab rather than reared and slaughtered. The comforting illusion that supermarket trays of plastic-wrapped steaks are not pieces of dead animal might become a discomforting reality.",
+        "topic": "cooking",
+        "created_at": "2020-03-09T21:21:00.000Z",
+        "votes": 45,
+        "totalcomments": 6
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "increases or decreases votes on the specified article",
+    "queries": ["inc_votes"],
+    "exampleResponse": {
+      "article": {
+        "article_id": 36,
+        "title": "The vegan carnivore?",
+        "body": "The chef Richard McGeown has faced bigger culinary challenges in his distinguished career than frying a meat patty in a little sunflower oil and butter. But this time the eyes and cameras of hundreds of journalists in the room were fixed on the 5oz (140g) pink disc sizzling in his pan, one that had been five years and €250,000 in the making. This was the world’s first proper portion of cultured meat, a beef burger created by Mark Post, professor of physiology, and his team at Maastricht University in the Netherlands. Post (which rhymes with ‘lost’, not ‘ghost’) has been working on in vitro meat (IVM) since 2009. On 5 August this year he presented his cultured beef burger to the world as a ‘proof of concept’. Having shown that the technology works, Post believes that in a decade or so we could see commercial production of meat that has been grown in a lab rather than reared and slaughtered. The comforting illusion that supermarket trays of plastic-wrapped steaks are not pieces of dead animal might become a discomforting reality.",
+        "votes": 46,
+        "topic": "cooking",
+        "author": "tickle122",
+        "created_at": "2020-03-09T21:21:00.000Z"
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments/": {
+    "decription": "serves a comments object containing an array of all comments for the specified article",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 29,
+          "votes": -2,
+          "created_at": "2020-09-13T07:23:00.000Z",
+          "author": "jessjelly",
+          "body": "Perferendis quia et nihil. Quasi ut voluptates sapiente et accusantium vel qui reprehenderit ratione. Autem alias voluptatem accusamus nesciunt beatae vero. Itaque repellat omnis et velit cum corporis aut id voluptas. Nostrum unde fuga ea. Perferendis quas maiores."
+        },
+        {
+          "comment_id": 90,
+          "votes": 2,
+          "created_at": "2020-01-16T00:00:00.000Z",
+          "author": "jessjelly",
+          "body": "Maxime error necessitatibus voluptatibus labore aliquid. Animi a maiores quo aut quia libero repellendus aut delectus. Illo dolorem sit eos at molestias sed. Sint quibusdam harum eos quidem praesentium corporis. Ut dolor aut consectetur nisi deserunt."
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments/": {
+    "description": "allows adding new comments to the specified article",
+    "queries": [],
+    "exampleRequest": { "username": "username", "body": "comment" },
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 156,
+          "author": "username",
+          "article_id": 22,
+          "votes": 0,
+          "created_at": "2022-02-13T18:49:37.783Z",
+          "body": "comment"
         }
       ]
     }
