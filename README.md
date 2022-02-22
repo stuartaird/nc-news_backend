@@ -59,7 +59,7 @@ A simple API for serving news articles and their associated comments & votes. Bu
 > Development: .env.development
 > Contaiing: `PGDATABASE=nc_news`
 >
-> In either case, the .env file should be placed in the db folder.
+> In either case, the .env file should be placed in the root directory.
 
 <br />
 
