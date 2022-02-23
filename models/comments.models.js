@@ -76,6 +76,46 @@ exports.insertComment = async (article_id, comment) => {
 };
 
 exports.removeComment = async (article_id, comment_id) => {
+  // confirm article exists
+  const articleQueryString = `
+    SELECT
+      *
+    FROM
+      articles
+    WHERE 
+      article_id = $1
+  `;
+  const articleCount = await db
+    .query(articleQueryString, [article_id])
+    .then((response) => {
+      return response.rowCount;
+    });
+
+  if (!articleCount || articleCount < 1) {
+    return Promise.reject({ status: 400, msg: "Article Not Found" });
+  }
+
+  // confirm comment exists
+  const commentQueryString = `
+    SELECT 
+      *
+    FROM  
+      comments
+    WHERE
+      article_id = $1 AND
+      comment_id = $2
+  `;
+
+  const commentCount = await db
+    .query(commentQueryString, [article_id, comment_id])
+    .then((response) => {
+      return response.rowCount;
+    });
+
+  if (!commentCount || commentCount < 1) {
+    return Promise.reject({ status: 400, msg: "Comment Not Found" });
+  }
+
   const deleteQueryString = `
     DELETE
     FROM

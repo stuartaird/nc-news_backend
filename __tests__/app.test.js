@@ -412,5 +412,37 @@ describe("/api/articles/:article_id/comments", () => {
           });
         });
     });
+    test("404: Returns a status code of 404 if the Article Id is not specified", () => {
+      return request(app)
+        .delete("/api/articles//comments/2")
+        .expect(404)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Invalid URL" });
+        });
+    });
+    test("404: Returns a status code of 404 if the Comment Id is not specified", () => {
+      return request(app)
+        .delete("/api/articles/1/comments/")
+        .expect(404)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Invalid URL" });
+        });
+    });
+    test("400: Returns a status code of 400 if the Article Id can't be found in the database", () => {
+      return request(app)
+        .delete("/api/articles/300/comments/2")
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Article Not Found" });
+        });
+    });
+    test("400: Returns a status code of 400 if the Comment Id can't be found in the database", () => {
+      return request(app)
+        .delete("/api/articles/1/comments/300")
+        .expect(400)
+        .then((response) => {
+          expect(response.body).toEqual({ msg: "Comment Not Found" });
+        });
+    });
   });
 });
