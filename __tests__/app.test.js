@@ -243,7 +243,9 @@ describe("api/articles", () => {
         .get("/api/articles?topic=cats")
         .expect(200)
         .then((response) => {
-          expect(response.body.articles.every((article) => (article.topic = "cats")));
+          expect(
+            response.body.articles.every((article) => (article.topic = "cats"))
+          );
         });
     });
     test("200: Sort_by query param will reorder results", () => {
@@ -387,6 +389,27 @@ describe("/api/articles/:article_id/comments", () => {
         .expect(400)
         .then((response) => {
           expect(response.body).toEqual({ msg: "Bad User Id" });
+        });
+    });
+  });
+  describe("DELETE", () => {
+    test("202: Returns a status code of 200 if the comment was successfully removed", () => {
+      return request(app)
+        .delete("/api/articles/1/comments/2")
+        .expect(202)
+        .then((response) => {
+          expect(response.body).toEqual({
+            removedComment: [
+              {
+                comment_id: 2,
+                author: 1,
+                article_id: 1,
+                votes: 14,
+                created_at: "2020-10-31T03:03:00.000Z",
+                body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+              },
+            ],
+          });
         });
     });
   });

@@ -1,4 +1,8 @@
-const { fetchComments, insertComment } = require("../models/comments.models.js");
+const {
+  fetchComments,
+  insertComment,
+  removeComment,
+} = require("../models/comments.models.js");
 
 exports.getComments = async (request, response, next) => {
   try {
@@ -11,8 +15,23 @@ exports.getComments = async (request, response, next) => {
 
 exports.addComment = async (request, response, next) => {
   try {
-    const comment = await insertComment(request.params.article_id, request.body);
+    const comment = await insertComment(
+      request.params.article_id,
+      request.body
+    );
     response.status(201).send({ comment });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteComment = async (request, response, next) => {
+  try {
+    const removedComment = await removeComment(
+      request.params.article_id,
+      request.params.comment_id
+    );
+    response.status(202).send({ removedComment });
   } catch (error) {
     next(error);
   }

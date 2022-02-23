@@ -74,3 +74,22 @@ exports.insertComment = async (article_id, comment) => {
     }
   }
 };
+
+exports.removeComment = async (article_id, comment_id) => {
+  const deleteQueryString = `
+    DELETE
+    FROM
+      comments
+    WHERE
+      article_id = $1 AND
+      comment_id = $2
+    RETURNING 
+      *`;
+
+  const removedComment = await db.query(deleteQueryString, [
+    article_id,
+    comment_id,
+  ]);
+
+  return removedComment.rows;
+};
