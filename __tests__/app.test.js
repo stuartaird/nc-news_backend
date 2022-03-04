@@ -393,6 +393,7 @@ describe("/api/articles/:article_id/comments", () => {
     });
   });
   describe("DELETE", () => {
+    test("202: Returns the deleted comment as a property of ", () => {});
     test("202: Returns a status code of 200 if the comment was successfully removed", () => {
       return request(app)
         .delete("/api/articles/1/comments/2")

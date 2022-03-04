@@ -92,8 +92,8 @@ A simple API for serving news articles and their associated comments & votes. Bu
 
 The following endpoints are supplimental and will be released in the future:-
 
-- `DELETE /api/comments/:comment_id`
-  - to allow authorised users to delete their own comments
+- ~~`DELETE /api/comments/:comment_id`~~
+  - ~~to allow authorised users to delete their own comments~~
 - `GET /api/users`
   - serves a list of configured usernames
 - `GET /api/users/:username`
