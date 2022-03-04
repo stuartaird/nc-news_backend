@@ -447,3 +447,34 @@ describe("/api/articles/:article_id/comments", () => {
     });
   });
 });
+
+describe.only("/users", () => {
+  describe("GET", () => {
+    test("200: Returns a status code of 200", () => {
+      return request(app).get("/api/users").expect(200);
+    });
+    test("200: returns a users object containing an array of strings", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          const users = response.body.users;
+
+          users.forEach((username) => {
+            expect(username).toEqual(expect.any(String));
+          });
+        });
+    });
+
+    test("200: returns valid usernames", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          const users = response.body.users;
+
+          expect(users).toEqual(expect.arrayContaining(["butter_bridge"]));
+        });
+    });
+  });
+});
