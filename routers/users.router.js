@@ -1,6 +1,7 @@
 const express = require("express");
+const { getUsers } = require("../controllers/users.controllers.js");
+
 const usersRouter = express.Router();
-const { getUsers } = require("../models/users.models.js");
 
 usersRouter.get("", getUsers);
 

@@ -216,7 +216,7 @@ describe("/api/articles/:article_id", () => {
   });
 });
 
-describe("api/articles", () => {
+describe("/api/articles", () => {
   describe("GET", () => {
     test("200: Returns an array of article objects", () => {
       return request(app)
